@@ -1,0 +1,45 @@
+service: loyalty-live-demo
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: '20201221'
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: "dynamodb:*"
+      Resource: "*"
+  environment:
+    DYNAMODB_CARDS_TABLE_NAME: loyalty-live-demo
+
+functions:
+  createLoyaltyCard:
+    handler: handler.create_loyalty_card
+    events:
+      - http:
+          path: /loyalty-cards
+          method: post
+  getAllLoyaltyCards:
+    handler: handler.get_all_loyalty_card
+    events:
+      - http:
+          path: /loyalty-cards
+          method: get
+package:
+  exclude:
+    - venv/**
+    - node_modules/**
+resources:
+  Resources:
+    LoyaltyCardDynamodbTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: card_number
+            AttributeType: S
+        KeySchema:
+          - AttributeName: card_number
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.DYNAMODB_CARDS_TABLE_NAME}
