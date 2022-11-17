@@ -44,8 +44,10 @@ def get_all_loyalty_card(event, context):
     return_body["items"] = DynamodbGateway.scan_table(
         table_name=table_name
     )
+    
+    return_body["status"] = "success"
 
-    response = {"statusCode": 200, "body": json.dumps(return_body), "status": "success"}
+    response = {"statusCode": 200, "body": json.dumps(return_body)}
 
     return response
 
