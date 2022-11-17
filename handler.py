@@ -45,7 +45,7 @@ def get_all_loyalty_card(event, context):
         table_name=table_name
     )
 
-    response = {"statusCode": 200, "body": json.dumps(return_body)}
+    response = {"statusCode": 200, "body": json.dumps(return_body), "status": "success"}
 
     return response
 
